@@ -58,7 +58,15 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     player.setId(previousSong);
   }
 
-  const [play, { stop, sound }] = useSound(songUrl, { volume: volume, onplay: () => setIsPlaying(true), onend: () => { setIsPlaying(false); onPlayNext(); }, onpause: () => setIsPlaying(false), onstop: () => setIsPlaying(false), format: ['mp3'] });
+  const [play, { stop, sound }] = useSound(songUrl, {
+    volume: volume,
+    onplay: () => setIsPlaying(true),
+    onend: () => { setIsPlaying(false); onPlayNext(); },
+    onpause: () => setIsPlaying(false),
+    onstop: () => setIsPlaying(false),
+    format: ['mp3'],
+  });
+
 
   useEffect(() => {
     sound?.play();
