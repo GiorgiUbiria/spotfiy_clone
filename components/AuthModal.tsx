@@ -40,6 +40,11 @@ const AuthModal = () => {
         theme="dark"
         magicLink
         providers={["github"]}
+        queryParams={{
+          access_type: 'offline',
+          prompt: 'consent',
+          hd: 'https://spotfiy-clone-jade.vercel.app',
+        }}
         supabaseClient={supabaseClient}
         appearance={{
           theme: ThemeSupa,
