@@ -8,6 +8,7 @@ declare module 'use-sound' {
     soundEnabled?: boolean;
     interrupt?: boolean;
     onload?: () => void;
+    format?: string[];
     [key: string]: string | number | boolean | (() => void) | string[] | undefined;
   }
 

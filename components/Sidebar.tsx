@@ -1,7 +1,7 @@
 "use client";
 
-import { HiHome } from "react-icons/hi";
-import { BiSearch } from "react-icons/bi";
+import { HiHomeModern } from "react-icons/hi2";
+import { VscSearchFuzzy } from "react-icons/vsc";
 import { twMerge } from "tailwind-merge";
 import { usePathname } from "next/navigation";
 
@@ -24,13 +24,13 @@ const Sidebar = ({ children, songs }: SidebarProps) => {
 
   const routes = useMemo(() => [
     {
-      icon: HiHome,
+      icon: HiHomeModern,
       label: 'Home',
       active: pathname !== '/search',
       href: '/'
     },
     {
-      icon: BiSearch,
+      icon: VscSearchFuzzy,
       label: 'Search',
       href: '/search',
       active: pathname === '/search'
@@ -52,7 +52,7 @@ const Sidebar = ({ children, songs }: SidebarProps) => {
           md:flex 
           flex-col 
           gap-y-2 
-          bg-black 
+          bg-gray-950 
           h-full 
           w-[300px] 
           p-2

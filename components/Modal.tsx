@@ -19,7 +19,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onChange, title, description, chi
       <Dialog.Portal>
         <Dialog.Overlay
           className="
-            bg-neutral-900/90
+            bg-gray-800/90
             backdrop-blur-sm
             fixed
             inset-0
@@ -43,7 +43,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onChange, title, description, chi
             translate-x-[-50%]
             translate-y-[-50%]
             rounded-md
-            bg-neutral-800
+            bg-gray-700
             p-[25px]
             focus:outline-none
           "

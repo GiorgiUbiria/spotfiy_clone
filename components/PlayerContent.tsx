@@ -1,10 +1,8 @@
-"use client";
-
-import useSound from "use-sound";
-import { useEffect, useState } from "react";
-import { BsPauseFill, BsPlayFill } from "react-icons/bs";
-import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
-import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
+import React, { useEffect, useState } from "react";
+import { BsPauseFill } from "react-icons/bs";
+import { HiMiniPlay, HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
+import { FaBackward, FaForward } from "react-icons/fa";
+import { Howl } from "howler";
 
 import { Song } from "@/types";
 import usePlayer from "@/hooks/usePlayer";
@@ -12,7 +10,7 @@ import usePlayer from "@/hooks/usePlayer";
 import LikeButton from "./LikeButton";
 import MediaItem from "./MediaItem";
 import Slider from "./Slider";
-
+import DurationSlider from "./DurationSlider";
 
 interface PlayerContentProps {
   song: Song;
@@ -26,9 +24,19 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
   const player = usePlayer();
   const [volume, setVolume] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [intervalId, setIntervalId] = useState<number>(0);
 
-  const Icon = isPlaying ? BsPauseFill : BsPlayFill;
+  function setSongVolume(value: number) {
+    setVolume(value);
+    sound?.volume(value);
+  }
+
+  const Icon = isPlaying ? BsPauseFill : HiMiniPlay;
   const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
+
+  const [sound, setSound] = useState<Howl | null>(null);
 
   const onPlayNext = () => {
     if (player.ids.length === 0) {
@@ -43,7 +51,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
     }
 
     player.setId(nextSong);
-  }
+  };
 
   const onPlayPrevious = () => {
     if (player.ids.length === 0) {
@@ -58,12 +66,13 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
     }
 
     player.setId(previousSong);
-  }
+  };
 
-  const [play, { pause, sound }] = useSound(
-    songUrl,
-    {
+  useEffect(() => {
+    const newSound = new Howl({
+      src: [songUrl],
       volume: volume,
+      html5: true,
       onplay: () => setIsPlaying(true),
       onend: () => {
         setIsPlaying(false);
@@ -71,24 +80,61 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
       },
       onpause: () => setIsPlaying(false),
       format: ['mp3']
-    }
-  );
+    });
 
-  useEffect(() => {
-    sound?.play();
+    newSound.once('load', () => {
+      setDuration(newSound.duration());
+    });
+
+    setSound(newSound);
+
+    if (sound) {
+      sound.on('play', () => {
+        setIsPlaying(true);
+      });
+
+      sound.on('pause', () => {
+        setIsPlaying(false);
+      });
+
+      sound.on('end', () => {
+        setIsPlaying(false);
+        onPlayNext();
+      });
+
+      sound.on('seek', () => {
+        console.log("seeking");
+
+        if (sound.playing()) {
+          setIsPlaying(true);
+        }
+      });
+    }
 
     return () => {
-      sound?.unload();
-    }
-  }, [sound]);
+      newSound.unload();
+    };
+  }, [songUrl]);
 
   const handlePlay = () => {
-    if (!isPlaying) {
-      play();
-    } else {
-      pause();
+    if (sound) {
+      if (!isPlaying) {
+        sound.play();
+      } else {
+        sound.pause();
+      }
     }
-  }
+  };
+
+  const handleSliderChange = (newTime: number) => {
+    setCurrentTime(newTime);
+    if (sound) {
+      sound.seek(newTime);
+      if (newTime >= duration) {
+        onPlayNext();
+      }
+    }
+  };
 
   const toggleMute = () => {
     if (volume === 0) {
@@ -96,14 +142,39 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
     } else {
       setVolume(0);
     }
-  }
+  };
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
+    if (isPlaying) {
+      intervalId = setInterval(() => {
+        setCurrentTime((currentTime) => currentTime + 1);
+        console.log('updated');
+      }, 1000);
+    } else {
+      clearInterval(intervalId);
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [sound, currentTime, isPlaying]);
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 h-full">
-      <div className="flex w-full justify-start">
+      <div className="flex w-full justify-between">
         <div className="flex items-center gap-x-4">
           <MediaItem data={song} />
           <LikeButton songId={song.id} />
+        </div>
+
+        <div className="hidden lg:flex items-center gap-x-2 w-[260px]">
+          <DurationSlider
+            duration={duration}
+            currentTime={currentTime}
+            onTimestampChange={handleSliderChange}
+          />
         </div>
       </div>
 
@@ -135,6 +206,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         </div>
       </div>
 
+
+
       <div
         className="
             hidden
@@ -147,7 +220,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
             gap-x-6
           "
       >
-        <AiFillStepBackward
+        <FaBackward
           onClick={onPlayPrevious}
           size={30}
           className="
@@ -157,14 +230,15 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
               transition
             "
         />
+
         <div
           onClick={handlePlay}
           className="
               flex 
               items-center 
               justify-center
-              h-10
-              w-10 
+              h-15
+              w-15 
               rounded-full 
               bg-white 
               p-1 
@@ -173,7 +247,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         >
           <Icon size={30} className="text-black" />
         </div>
-        <AiFillStepForward
+
+        <FaForward
           onClick={onPlayNext}
           size={30}
           className="
@@ -194,13 +269,12 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
           />
           <Slider
             value={volume}
-            onChange={(value) => setVolume(value)}
+            onChange={(value) => setSongVolume(value)}
           />
         </div>
       </div>
-
     </div>
   );
-}
+};
 
 export default PlayerContent;

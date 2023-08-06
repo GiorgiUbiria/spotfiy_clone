@@ -30,8 +30,8 @@ const ListItem: React.FC<ListItemProps> = ({ image, name, href }) => {
         rounded-md
         overflow-hidden
         gap-x-4
-        bg-neutral-100/10
-        hover:bg-netural-100/20
+        bg-gray-50/10
+        hover:bg-gray-50/20
         transition
         pr-4
     ">
@@ -54,7 +54,7 @@ const ListItem: React.FC<ListItemProps> = ({ image, name, href }) => {
           rounded-full 
           flex items-center
           justify-center 
-          bg-green-500 
+          bg-sky-500 
           p-4 
           drop-shadow-md 
           right-5 

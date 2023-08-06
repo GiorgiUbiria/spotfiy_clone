@@ -43,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
     <div className={twMerge(`
       h-fit
       bg-gradient-to-b
-      from-emerald-800
+      from-sky-800
       p-6
     `,
       className
@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
             onClick={() => router.back()}
             className="
               rounded-full 
-              bg-black 
+              bg-gray-800 
               flex 
               items-center 
               justify-center 
@@ -66,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
             onClick={() => router.forward()}
             className="
               rounded-full 
-              bg-black 
+              bg-gray-800 
               flex 
               items-center 
               justify-center 

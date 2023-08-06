@@ -5,7 +5,8 @@
 html,
 body,
 :root {
+  --tw-bg-opacity: 1;
   height: 100%;
-  background-color: black;
+  background-color: rgb(3 7 18 / var(--tw-bg-opacity));
   color-scheme: dark;
 }
