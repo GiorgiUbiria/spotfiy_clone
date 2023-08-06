@@ -149,17 +149,19 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
 
     if (isPlaying) {
       intervalId = setInterval(() => {
-        setCurrentTime((currentTime) => currentTime + 1);
+        setCurrentTime((prevTime) => prevTime + 1);
         console.log('updated');
       }, 1000);
     } else {
-      clearInterval(intervalId);
+      clearInterval(intervalId!);
     }
 
     return () => {
-      clearInterval(intervalId);
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
     };
-  }, [sound, currentTime, isPlaying]);
+  }, [isPlaying]);
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 h-full">
