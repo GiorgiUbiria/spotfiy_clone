@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Toaster } from "react-hot-toast";
 
@@ -8,11 +8,11 @@ const ToasterProvider = () => {
       toastOptions={{
         style: {
           background: '#333',
-          color: '#fff'
+          color: '#fff',
         }
       }}
     />
-  )
+  );
 }
 
 export default ToasterProvider;
