@@ -242,7 +242,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
           "
           />
         </div>
-        <div className="hidden md:flex lg:hidden justify-evenly items-center w-full">
+        <div className="hidden breakpoint:flex lg:hidden justify-evenly items-center w-full">
           <DurationSlider
             duration={duration}
             currentTime={currentTime}

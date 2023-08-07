@@ -19,7 +19,7 @@ const DurationSlider: React.FC<DurationSliderProps> = ({
   return (
     <>
       <div className="text-neutral-500/80 text-sm">{formatTime(currentTime!)}</div>
-      <RadixSlider.Root className="relative flex items-center select-none touch-none md:w-1/2 lg:w-1/3" defaultValue={[currentTime!]} value={[currentTime!]} onValueChange={handleChange} max={duration} step={0.1} aria-label="Timestamp" >
+      <RadixSlider.Root className="relative flex items-center select-none touch-none md:w-1/2 breakpoint:w-1/2" defaultValue={[currentTime!]} value={[currentTime!]} onValueChange={handleChange} max={duration} step={0.1} aria-label="Timestamp" >
         <RadixSlider.Track
           className="
           bg-gray-500
