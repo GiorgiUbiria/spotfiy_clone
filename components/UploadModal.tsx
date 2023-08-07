@@ -13,6 +13,7 @@ import { useUser } from "@/hooks/useUser";
 import uniqid from "uniqid";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/navigation";
+import TextArea from "./TextArea";
 
 const UploadModal = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +26,8 @@ const UploadModal = () => {
     defaultValues: {
       author: '',
       title: '',
+      lyrics: '',
+      lyrics_txt: null,
       song: null,
       image: null,
     }
@@ -43,10 +46,25 @@ const UploadModal = () => {
 
       const imageFile = values.image?.[0];
       const songFile = values.song?.[0];
+      const lyricsFile = values.lyrics_txt?.[0];
+
 
       if (!imageFile || !songFile || !user) {
         toast.error('Missing Fields');
         return;
+      }
+
+      let lyrics = values.lyrics;
+
+      if (lyricsFile) {
+        const reader = new FileReader();
+        const text = await new Promise((resolve, reject) => {
+          reader.onload = (e) => resolve(e?.target?.result);
+          reader.onerror = (e) => reject(e);
+          reader.readAsText(lyricsFile);
+        });
+
+        lyrics = text as string;
       }
 
       const uniqueID = uniqid();
@@ -77,6 +95,7 @@ const UploadModal = () => {
           user_id: user.id,
           title: values.title,
           author: values.author,
+          lyrics: lyrics,
           image_path: imageData.path,
           song_path: songData.path
         })
@@ -125,6 +144,22 @@ const UploadModal = () => {
           {...register('author', { required: true })}
           placeholder="Song Author"
         />
+        <div className="pb-1 pt-1 border-y-2 border-spacing-4 border-dashed border-neutral-400">
+          <TextArea
+            id='lyrics'
+            disabled={isLoading}
+            {...register('lyrics', { required: false })}
+            placeholder="Song Lyrics"
+          />
+          <p className="text-sm py-2 text-neutral-400">Or upload a <em>.txt</em> file:</p>
+          <Input
+            id='lyrics_txt'
+            type='file'
+            disabled={isLoading}
+            accept=".txt"
+            {...register('lyrics_txt', { required: false })}
+          />
+        </div>
         <div>
           <div className="pb-1">
             Select a song file:
