@@ -171,7 +171,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
           <LikeButton songId={song.id} />
         </div>
 
-        <div className="hidden lg:flex items-center gap-x-2 w-[260px]">
+
+        <div className="hidden lg:flex justify-evenly items-center w-full">
           <DurationSlider
             duration={duration}
             currentTime={currentTime}
@@ -180,28 +181,20 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
         </div>
       </div>
 
-      <div
-        className="
-            flex 
-            md:hidden 
-            col-auto 
-            w-full 
-            justify-end 
-            items-center
-          "
-      >
+      <div className="flex md:hidden col-auto w-full justify-end items-center">
+
         <div
           onClick={handlePlay}
           className="
-              h-10
-              w-10
-              flex 
-              items-center 
-              justify-center 
-              rounded-full 
-              bg-white 
-              p-1 
-              cursor-pointer
+            h-10
+            w-10
+            flex 
+            items-center 
+            justify-center 
+            rounded-full 
+            bg-white 
+            p-1 
+            cursor-pointer
             "
         >
           <Icon size={30} className="text-black" />
@@ -210,56 +203,52 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
 
 
 
-      <div
-        className="
-            hidden
-            h-full
-            md:flex 
-            justify-center 
-            items-center 
-            w-full 
-            max-w-[722px] 
-            gap-x-6
-          "
-      >
-        <FaBackward
-          onClick={onPlayPrevious}
-          size={30}
-          className="
-              text-neutral-400 
-              cursor-pointer 
-              hover:text-white 
-              transition
-            "
-        />
-
+      <div className="w-full flex flex-col justify-center">
         <div
-          onClick={handlePlay}
           className="
-              flex 
-              items-center 
-              justify-center
-              h-15
-              w-15 
-              rounded-full 
-              bg-white 
-              p-1 
-              cursor-pointer
-            "
+        hidden
+        h-full
+        md:flex 
+        justify-center 
+        items-center 
+        w-full 
+        max-w-[722px] 
+        gap-x-6
+        "
         >
-          <Icon size={30} className="text-black" />
-        </div>
-
-        <FaForward
-          onClick={onPlayNext}
-          size={30}
-          className="
-              text-neutral-400 
+          <FaBackward
+            onClick={onPlayPrevious}
+            size={30}
+            className="
+          text-neutral-400 
               cursor-pointer 
               hover:text-white 
               transition
-            "
-        />
+              "
+          />
+
+          <div onClick={handlePlay} className="flex items-center justify-center h-15 w-15 rounded-full bg-white p-1 cursor-pointer">
+            <Icon size={30} className="text-black" />
+          </div>
+
+          <FaForward
+            onClick={onPlayNext}
+            size={30}
+            className="
+          text-neutral-400 
+          cursor-pointer 
+          hover:text-white 
+          transition
+          "
+          />
+        </div>
+        <div className="hidden md:flex lg:hidden justify-evenly items-center w-full">
+          <DurationSlider
+            duration={duration}
+            currentTime={currentTime}
+            onTimestampChange={handleSliderChange}
+          />
+        </div>
       </div>
 
       <div className="hidden md:flex w-full justify-end pr-2">
@@ -267,7 +256,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
           <VolumeIcon
             onClick={toggleMute}
             className="cursor-pointer"
-            size={34}
+            size={30}
           />
           <Slider
             value={volume}

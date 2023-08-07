@@ -1,4 +1,4 @@
-import Slider from "react-slider";
+import * as RadixSlider from "@radix-ui/react-slider"
 import { formatTime } from "@/utils/timeUtils";
 
 interface DurationSliderProps {
@@ -12,22 +12,35 @@ const DurationSlider: React.FC<DurationSliderProps> = ({
   currentTime,
   onTimestampChange
 }) => {
+  const handleChange = (newValue: number[]) => {
+    onTimestampChange?.(newValue[0]);
+  }
+
   return (
-    <div className="flex items-center justify-between gap-x-2">
-      <div className="text-neutral-500/80 text-sm w-[30px]">{formatTime(currentTime!)}</div>
-      <Slider
-        min={1}
-        max={duration}
-        step={0.05}
-        value={currentTime}
-        onChange={onTimestampChange}
-        className="w-32 ml-[10px] h-4 flex-grow border border-black rounded-lg"
-        thumbClassName="example-thumb"
-        trackClassName="example-track"
-        ariaLabelledby="slider-label"
-      />
-      <div className="text-neutral-500/80 text-sm w-[30px]">{formatTime(duration || 0)}</div>
-    </div>
+    <>
+      <div className="text-neutral-500/80 text-sm">{formatTime(currentTime!)}</div>
+      <RadixSlider.Root className="relative flex items-center select-none touch-none md:w-1/2 lg:w-1/3" defaultValue={[currentTime!]} value={[currentTime!]} onValueChange={handleChange} max={duration} step={0.1} aria-label="Timestamp" >
+        <RadixSlider.Track
+          className="
+          bg-gray-500
+          relative
+          grow
+          rounded-lg
+          h-[5px]
+        "
+        >
+          <RadixSlider.Range
+            className="
+            absolute
+            bg-white
+            rounded-full
+            h-full
+          "
+          />
+        </RadixSlider.Track>
+      </RadixSlider.Root>
+      <div className="text-neutral-500/80 text-sm">{formatTime(duration || 0)}</div>
+    </>
   );
 };
 
